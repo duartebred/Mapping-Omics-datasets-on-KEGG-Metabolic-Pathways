@@ -25,34 +25,31 @@ Features
     User-friendly Interface: Designed with the user in mind, ensuring ease of navigation and data interpretation.
 </div>
 
-# Getting Started
+# KEGGCharter Enhanced: Interactive Omics Visualization on KEGG Pathways
 
-[Instructions on how to install, configure, and use KEGGCharter, including any prerequisites.]
+## Overview
 
-# Usage
+KEGGCharter Enhanced is a pioneering tool designed to bridge the gap between complex omics datasets and metabolic pathway visualization. By innovatively integrating differential gene expression data with taxonomy directly onto KEGG metabolic maps, our tool offers a holistic view of microbial activity and its implications in various biological processes. This enhanced version of KEGGCharter leverages the power of Biopython and introduces interactive JavaScript elements to elevate the analytical capabilities of researchers and enthusiasts alike.
 
-[Step-by-step guide on how to generate interactive KEGG metabolic maps, with examples.]
+## Key Features
 
-# Contributing
+- **Interactive Visualization**: Dive deeper into the metabolic pathways with interactive elements that reveal intricate details of gene expression and microbial taxonomy in a singular, cohesive map.
+- **Multi-Level Taxonomic Representation**: Navigate through various taxonomic levels directly on the KEGG maps, enriching the contextual understanding of the data.
+- **Direct Data Access**: Obtain numeric values and detailed information with just a click, simplifying data analysis and interpretation.
+- **Enhanced Connectivity**: Seamlessly access related online databases through embedded links and cross-references, expanding the research horizon.
 
-[Information on how others can contribute to the project, including coding standards, pull request guidelines, etc.]
+## Why KEGG?
 
-# License
-
-[License information for the project.]
-
-# Acknowledgments
-
-[Acknowledgment of any collaborators, funding bodies, or any third-party resources that made the project possible.]
-
-Visit [KEGGCharter on GitHub](https://github.com/iquasere/KEGGCharter) for more information and updates.
+KEGG (Kyoto Encyclopedia of Genes and Genomes) is an indispensable resource for the visualization and interpretation of high-level functions and utilities of the biological system. It serves as a canvas for KEGGCharter Enhanced, allowing for the mapping of omics datasets on metabolic pathways to uncover the dynamic interplay between genes, enzymes, and biochemical reactions.
 
 
-
-This project was developed by student [Duarte Velho](https://github.com/duartebred) (PG53481), under the guidance of João Sequeira and Andreia Salvador, in collaboration with the Center of Biological Engineering - University of Minho (CEB-UM).
 <div align="justify">
+This project was developed by student [Duarte Velho](https://github.com/duartebred) (PG53481), under the guidance of [João Sequeira](https://github.com/iquasere) and Andreia Salvador, in collaboration with the Center of Biological Engineering - University of Minho (CEB-UM).
+
 This repository was created as part of the UC Project (2023/24), of the Master's Degree in Bioinformatics at the School of Engineering of the University of Minho, and aims to bring together the scripts, notebooks and built throughout the work, as well as articles in their different versions, presentation slides and all relevant supplementary material (data, results, software developed, etc).
 This repository stands out for the originality and authorship of the written code.
 </div>
 
+
+Visit [KEGGCharter on GitHub](https://github.com/iquasere/KEGGCharter) for more information and updates.
 ##
