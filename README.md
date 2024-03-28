@@ -18,7 +18,6 @@ KEGGCharter Enhanced is a pioneering tool designed to bridge the gap between com
 </div>
 
 ## Key Features
-
 - **Interactive Visualization**: Dive deeper into the metabolic pathways with interactive elements that reveal intricate details of gene expression and microbial taxonomy in a singular, cohesive map.
 - **Multi-Level Taxonomic Representation**: Navigate through various taxonomic levels directly on the KEGG maps, enriching the contextual understanding of the data.
 - **Direct Data Access**: Obtain numeric values and detailed information with just a click, simplifying data analysis and interpretation.
@@ -27,13 +26,14 @@ KEGGCharter Enhanced is a pioneering tool designed to bridge the gap between com
 
 
 ## Credits
-<div align="justify">
+
 This project was developed by student [Duarte Velho](https://github.com/duartebred) (PG53481), under the guidance of [João Sequeira](https://github.com/iquasere) and Andreia Salvador, in collaboration with the Center of Biological Engineering - University of Minho (CEB-UM).
 
+<div align="justify">
 This repository was created as part of the UC Project (2023/24), of the Master's Degree in Bioinformatics at the School of Engineering of the University of Minho, and aims to bring together the scripts, notebooks and built throughout the work, as well as articles in their different versions, presentation slides and all relevant supplementary material (data, results, software developed, etc).
 This repository stands out for the originality and authorship of the written code.
 </div>
 
-
+##
 Visit [KEGGCharter on GitHub](https://github.com/iquasere/KEGGCharter) for more information and updates.
 ##
