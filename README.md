@@ -1,9 +1,9 @@
 # Mapping Omics datasets on KEGG Metabolic Pathways
 
 # Index
-- [Context and Motivation](#ContextandMotivation)
+- [Context and Motivation](#Context_and_Motivation)
 - [Overview](#Overview)
-- [Key Features](#KeyFeatures)
+- [Key Features](#Key_Features)
 - [Credits](#Credits)
   
 # Context and Motivation
