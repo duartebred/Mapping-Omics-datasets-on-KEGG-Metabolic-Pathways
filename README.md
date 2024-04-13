@@ -35,5 +35,5 @@ This repository stands out for the originality and authorship of the written cod
 </div>
 
 ##
-Visit [KEGGCharter on GitHub](https://github.com/iquasere/KEGGCharter) for more information and updates.
+Visit [KEGGCharter on GitHub](https://github.com/iquasere/KEGGCharter), and [paper](https://www.sciencedirect.com/science/article/pii/S2001037022001179) for more information and updates.
 ##
