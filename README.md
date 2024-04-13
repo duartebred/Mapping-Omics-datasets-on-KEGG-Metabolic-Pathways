@@ -2,7 +2,7 @@
 
 # Index
 - [Context and Motivation](#context-and-motivation)
-- [Objective](#Objective of the project)
+- [Objective](#Objective-of-the-project)
 - [Key Features](#key-features)
 - [Credits](#credits)
   
