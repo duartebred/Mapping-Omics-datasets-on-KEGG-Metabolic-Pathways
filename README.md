@@ -12,9 +12,9 @@ KEGG (Kyoto Encyclopedia of Genes and Genomes) is a comprehensive database resou
 </div>
 
 
-## Overview
+## Objective of the project
 <div align="justify">
-KEGGCharter Enhanced is a pioneering tool designed to bridge the gap between complex omics datasets and metabolic pathway visualization. By innovatively integrating differential gene expression data with taxonomy directly onto KEGG metabolic maps, our tool offers a holistic view of microbial activity and its implications in various biological processes. This enhanced version of KEGGCharter leverages the power of Biopython and introduces interactive JavaScript elements to elevate the analytical capabilities of researchers and enthusiasts alike.
+In this work, the plots of KEGGCharter will be expanded to include multi-level representation of gene expression information. The work will involve developing new interactive representations over the currently outputted plots, to allows the inclusion of more information in metabolic maps.
 </div>
 
 ## Key Features
@@ -30,7 +30,7 @@ KEGGCharter Enhanced is a pioneering tool designed to bridge the gap between com
 This project was developed by student [Duarte Velho](https://github.com/duartebred) (PG53481), under the guidance of [João Sequeira](https://github.com/iquasere) and Andreia Salvador, in collaboration with the Center of Biological Engineering - University of Minho (CEB-UM).
 
 <div align="justify">
-This repository was created as part of the UC Project (2023/24), of the Master's Degree in Bioinformatics at the School of Engineering of the University of Minho, and aims to bring together the scripts, notebooks and built throughout the work, as well as articles in their different versions, presentation slides and all relevant supplementary material (data, results, software developed, etc).
+This repository was created as part of the UC Project (2023/24), of the Master's Degree in Bioinformatics at the School of Engineering of the University of Minho, and aims to bring together the scripts built throughout the work, as well as articles in their different versions, presentation slides and all relevant supplementary material (data, results, software developed, etc).
 This repository stands out for the originality and authorship of the written code.
 </div>
 
