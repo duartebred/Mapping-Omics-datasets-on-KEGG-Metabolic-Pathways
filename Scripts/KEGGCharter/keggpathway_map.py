@@ -232,15 +232,12 @@ class KEGGPathwayMap:
                 boxes2ko[box].append(ko)
         with open(f'info/{name}_box2kos.json', 'w') as outfile:
             json.dump(boxes2ko, outfile)
-        data=keggcharter_info
-        print(data.columns)
         for box, kos in boxes2ko.items():
-            data = data[data['KO (KEGGCharter)'].isin(kos)]
+            data = keggcharter_info[keggcharter_info['KO (KEGGCharter)'].isin(kos)]
             if len(data) > 0:
-                print(data)
                 data = data.groupby(taxa_column)[q_cols].sum().reset_index()
                 data.to_csv(f'info/{name}_{box}_info.json',sep='\t',index=False)
-            
+
 
     ############################################################################
     ####                          Operations                                ####
@@ -432,9 +429,11 @@ class KEGGPathwayMap:
         self.to_pdf(f'{output}/maps/potential_{name}.pdf')
         self.create_potential_legend(
             dic_colors.values(), dic_colors.keys(), f'{output}/maps/potential_{name}_legend.png')
+        '''
         self.add_legend(
             f'{output}/maps/potential_{name}.pdf', f'{output}/maps/potential_{name}_legend.png',
             f'{output}/maps/potential_{self.title.replace("/", "|")}.png')
+        '''
         box2taxon = {key: ','.join(set(value)) if type(value) != str else value for key, value in box2taxon.items()}
         if len(box2taxon) > 0:
             df = pd.DataFrame.from_dict(box2taxon, orient='index').reset_index()
@@ -482,9 +481,9 @@ class KEGGPathwayMap:
         self.to_pdf(f'{output}/maps/differential_{name}.pdf')
         self.differential_colorbar(
             df, f'{output}/maps/differential_{name}_legend.png', colormap_name=colormap_name)
-        self.add_legend(
-            f'{output}/maps/differential_{name}.pdf', f'{output}/maps/differential_{name}_legend.png',
-            f'{output}/maps/differential_{self.title.replace("/", "|")}.png')
+        #self.add_legend(
+        #    f'{output}/maps/differential_{name}.pdf', f'{output}/maps/differential_{name}_legend.png',
+        #    f'{output}/maps/differential_{self.title.replace("/", "|")}.png')
 
 
     def add_legend(self, kegg_map_file, legend_file, output):
