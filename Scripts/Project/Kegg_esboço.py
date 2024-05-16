@@ -102,6 +102,35 @@ def imprimir_elementos_graficos(caminho_kgml : str) -> None:
     print("Total de elementos gráficos:", len(retangulos))
 
 
+def criar_pagina_detalhe(id):
+    """
+    Cria uma página HTML individual para um ID específico que se parece com o esboço fornecido.
+
+    Parameters
+    ----------
+    id : str
+        O ID do elemento.
+    """
+    detalhe_html = f"""
+    <!DOCTYPE html>
+    <html lang='en'>
+    <head>
+        <meta charset='UTF-8'>
+        <title>Detalhes do Elemento {id}</title>
+    </head>
+    <body>
+        <button onclick="location.href='http://example.com/KEGG';">Link KEGG</button>
+        <h1>MAP 00680</h1>
+        <div style="border: 2px solid black; height: 300px; width: 300px; margin: 20px auto;">
+            Detalhes para ID {id}
+        </div>
+    </body>
+    </html>
+    """
+    with open(f"detalhes_{id}.html", 'w') as file:
+        file.write(detalhe_html)
+
+
 def criar_image_maps(coordenadas : list[dict[str, str]], imagem : str = "./KEGGCharter/original_kegg_map.png", arquivo_saida : str = f"image_maps.html", titulo_imagem : str = "Methane metabolism Map") -> None:
     """
     Cria um arquivo HTML com mapas de imagem com base em coordenadas especificadas.
@@ -146,16 +175,17 @@ def criar_image_maps(coordenadas : list[dict[str, str]], imagem : str = "./KEGGC
         y2 = y1 + int(coords['height'])*2.2
         return f"{x1},{y1},{x2},{y2}"
 
-    html = f"<!DOCTYPE html>\n<html lang='en'>\n<head>\n    <meta charset='UTF-8'>\n    <title>Image Maps</title>\n</head>\n<body>\n    <h2>{titulo_imagem}</h2>\n    <img src='{imagem}' usemap='#potentialMap' alt='{titulo_imagem}'>\n    <map name='potentialMap'>\n"
+    html = f"<!DOCTYPE html>\n<html lang='en'>\n<head>\n    <meta charset='UTF-8'>\n    <title>{titulo_imagem}</title>\n</head>\n<body>\n    <h2>{titulo_imagem}</h2>\n    <img src='{imagem}' usemap='#potentialMap' alt='{titulo_imagem}'>\n    <map name='potentialMap'>\n"
     
     for coord in coordenadas:
         id = coord['id']
-        link = f"http://example.com/detail/{id}"  # Gera o link dinamicamente baseado no ID
+        criar_pagina_detalhe(id)  # Cria a página de detalhes com o layout especificado
+        link = f"detalhes_{id}.html"  # Atualiza o link para a nova página de detalhes
         area_str = coords_to_area(coord)
-        html += f'        <area shape="rect" coords="{area_str}" href="{link}" alt="Element ID {id}">\n'
+        html += f'        <area shape="rect" coords="{area_str}" href="{link}" target="_blank" alt="Element ID {id}">\n'
     
     html += "</map>\n</body>\n</html>"
-
+    
     with open(arquivo_saida, 'w') as file:
         file.write(html)
 
