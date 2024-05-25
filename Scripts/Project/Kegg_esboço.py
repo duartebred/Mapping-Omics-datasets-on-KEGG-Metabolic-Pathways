@@ -1,6 +1,7 @@
 ##Nesta abordagem, tentamos trabalhar com o React diretamente no HTML gerado pelo seu script Python
 import json
 import csv
+import xml.etree.ElementTree as ET
 
 def load_json_to_dict(filepath: str) -> dict[str, any]:
     """
@@ -35,10 +36,10 @@ def carregar_kgml(caminho_kgml : str) -> None:
         The root of the XML document.
     """
 
-    import xml.etree.ElementTree as ET
     tree = ET.parse(caminho_kgml)
     root = tree.getroot()
     return root
+
 
 def extrair_titulo_pathway(caminho_kgml: str) -> str:
     """
@@ -55,13 +56,12 @@ def extrair_titulo_pathway(caminho_kgml: str) -> str:
         O título da pathway.
     """
 
-    import xml.etree.ElementTree as ET
-
     tree = ET.parse(caminho_kgml)
     root = tree.getroot()
     
     titulo_pathway = root.get('title', 'Título não encontrado')
     return titulo_pathway
+
 
 def extrair_numero_pathway(caminho_kgml: str) -> str:
     """
@@ -77,8 +77,6 @@ def extrair_numero_pathway(caminho_kgml: str) -> str:
     str
         O número da pathway.
     """
-
-    import xml.etree.ElementTree as ET
 
     tree = ET.parse(caminho_kgml)
     root = tree.getroot()
@@ -131,7 +129,7 @@ def extrair_elementos_graficos_com_id(root, tipo: str = 'rectangle') -> list[dic
     return elementos_id
 
 
-def enriquecer_elementos_graficos(elementos_graficos: list[dict[str, str]], caminho_tsv: str, caminho_json_taxon: str, caminho_json_kos: str) -> list[dict[str, str]]:
+def enriquecer_elementos_graficos(elementos_graficos_com_id: list[dict[str, str]], caminho_tsv: str, caminho_json_taxon: str, caminho_json_kos: str) -> list[dict[str, str]]:
     """
     Enriquece os elementos gráficos com os dados provenientes de um arquivo TSV e dois arquivos JSON.
 
@@ -165,13 +163,13 @@ def enriquecer_elementos_graficos(elementos_graficos: list[dict[str, str]], cami
     id_to_taxon = load_json_to_dict(caminho_json_taxon)
     id_to_kos = load_json_to_dict(caminho_json_kos)
 
-    for elemento in elementos_graficos:
+    for elemento in elementos_graficos_com_id:
         elemento_id = elemento['id']
         elemento['EC_KO'] = id_to_name.get(elemento_id, "Unknown")
         elemento['taxon'] = id_to_taxon.get(elemento_id, "Unknown")
         elemento['kos'] = id_to_kos.get(elemento_id, "Unknown")
 
-    return elementos_graficos
+    return elementos_graficos_com_id
 
 
 def imprimir_elementos_graficos(caminho_kgml : str) -> None:
@@ -195,25 +193,7 @@ def imprimir_elementos_graficos(caminho_kgml : str) -> None:
     print("Total de elementos gráficos:", len(retangulos))
 
 
-def load_json_to_dict(filepath):
-    """
-    Carrega um ficheiro JSON a partir de um caminho de ficheiro especificado e devolve o conteúdo como um dicionário.
-
-    Parameters
-    ----------
-    filepath : str
-        O caminho para o ficheiro JSON.
-
-    Returns
-    -------
-    dict
-        O conteúdo do ficheiro JSON como um dicionário.
-    """
-    with open(filepath, 'r') as file:
-        data = json.load(file)
-    return data
-
-def ler_arquivos_tsv(caminho_differential, caminho_potential):
+def ler_arquivos_tsv(caminho_differential : str, caminho_potential : str) -> dict:
     """
     Carrega dados de dois arquivos TSV e retorna um dicionário com identificadores únicos 
     como chaves e as respectivas taxas como valores. Se um identificador
@@ -254,19 +234,60 @@ def ler_arquivos_tsv(caminho_differential, caminho_potential):
     return dados
 
 
-def criar_pagina_detalhe(id, link):
+def criar_caixas_coloridas(id : str, colors_dict : dict[str, list[str]]) -> str:
     """
-    Cria uma página HTML individual para um ID específico que se parece com o esboço fornecido.
+    Gera uma string HTML que representa várias subcaixas alinhadas horizontalmente,
+    cada uma colorida conforme especificado no dicionário para um ID específico.
+    As subcaixas são criadas com uma borda preta para melhor visualização.
 
     Parameters
     ----------
-    id : str
-        O ID do elemento.
-    link : str
-        O link para a ação do botão.
+        id : str 
+            O identificador que aponta para a lista de cores no dicionário.
+
+        colors_dict : dict[str, list[str]] 
+            Um dicionário mapeando identificadores para listas de strings de cores.
+
+    Returns
+    -------
+        str 
+            Uma string HTML que representa uma linha de subcaixas coloridas, cada uma com borda preta.
+    """
+    colors = colors_dict.get(str(id), ["#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF"])  # Cor padrão se não houver entrada
+    # Criação das caixas com borda preta
+    boxes_html = ''.join([
+        f'<div style="background-color: {color}; width: 25%; height: 50px; display: inline-block; border: 1px solid black;"></div>'
+        for color in colors
+    ])
+    return f'<div style="width: 100%; height: 50px; display: flex;">{boxes_html}</div>'
+
+
+def criar_pagina_detalhe(id : str, link : str, ec_ko : str, KO : list[str], Taxon : list[str], colors_dict : dict[str, list[str]]):
+    """
+    Cria uma página HTML detalhada para um ID específico com base nos dados fornecidos e nas cores definidas no dicionário.
+    
+    Parameters
+    ----------
+        id : str 
+            O identificador do elemento, usado para criar caixas coloridas específicas e nomear o arquivo HTML.
+        link : str
+            O URL para o qual o botão na página HTML deve redirecionar.
+        ec_ko : str 
+            O número EC ou KO que será usado como título da página.
+        KO : list[str] 
+            Lista de números K que serão exibidos na página.
+        Taxon : list[str] 
+            Lista de nomes de taxons associados que serão exibidos na página.
+        colors_dict : dict[str, list[str]] 
+            Dicionário mapeando identificadores para listas de cores, usado para colorir caixas na página.
+
+    Effects
+    -------
+        Cria um arquivo HTML na diretoria atual com o nome baseado no pathway e no ID fornecido.
     """
     numero_pathway = extrair_numero_pathway(caminho_kgml)
     titulo_pathway = extrair_titulo_pathway(caminho_kgml)
+    color_boxes = criar_caixas_coloridas(id, colors_dict)
 
     imagem_url_differential = "./KEGGCharter/first_time_running_KC/maps/differential_ko00680_legend.png"
     imagem_url_potential = "./KEGGCharter/first_time_running_KC/maps/potential_ko00680_legend.png"
@@ -276,40 +297,87 @@ def criar_pagina_detalhe(id, link):
     <html lang='en'>
     <head>
         <meta charset='UTF-8'>
-        <title>EC_Number {id}</title>
+        <title>EC_Number {ec_ko}</title>
         <style>
-            body {{
-                text-align: center; /* Centraliza o conteúdo de body na tela */
-                margin: 0;
-                padding: 0;
-                display: flex;
-                flex-direction: column;
-                justify-content: center; /* Centraliza verticalmente */
-                height: 100vh; /* Ocupa toda a altura da janela */
-            }}
-            .container {{
-                width: 100%; /* A largura total da div container */
-                display: flex;
-                flex-direction: column;
-                align-items: center; /* Centraliza horizontalmente os itens dentro do container */
-            }}
-            .content {{
-                border: 2px solid black;
-                height: 300px;
-                width: 300px;
-                margin-top: 20px; /* Espaço acima do div */
-            }}
+        body {{
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 50px;
+            background-color: #f4f4f4;
+        }}
+        .grid-container {{
+            display: grid;
+            grid-template-columns: 5fr 5fr;
+            gap: 0px 10px;
+        }}
+        #botao {{
+            grid-row-start: 1;
+            grid-row-end: 1;
+            grid-column-start: 1;
+            grid-column-end: 1;
+        }}
+        #titulo {{
+            grid-row-start: 2;
+            grid-row-end: 2;
+            grid-column-start: 1;
+            grid-column-end: 5;
+        }}
+        #information {{
+            grid-row-start: 5;
+            grid-row-end: 5;
+            grid-column-start: 1;
+            grid-column-end: 4;
+        }}
+        #img_differential {{
+            grid-row-start: 3;
+            grid-row-end: 5;
+            grid-column-start: 5;
+            grid-column-end: 5;
+        }}
+        #img_potential {{
+            grid-row-start: 5;
+            grid-row-end: 5;
+            grid-column-start: 5;
+            grid-column-end: 5;
+        }}
+        #box_differential {{
+            grid-row-start: 3;
+            grid-row-end: 3;
+            grid-column-start: 1;
+            grid-column-end: 5;
+        }}
+        #ECNumber {{
+            grid-row-start: 1;
+            grid-row-end: 1;
+            grid-column-start: 5;
+            grid-column-end: 5;
+        }}
         </style>
     </head>
     <body>
-        <div class="container">
-            <button onclick="location.href='{link}';">Link KEGG</button>
-            <h1>{titulo_pathway} - MAP {numero_pathway}</h1>
-            <div>
-                Box ID - {id}
-                K numbers - 
+        <div class="grid-container">
+            <div class="grid-item" id = "botao">
+                <button onclick="location.href='{link}';">Link KEGG</button>
+            </div>
+            <div class="grid-item" id = "titulo">
+                <h1>{titulo_pathway} - MAP {numero_pathway}</h1>
+            </div>
+            <div class="grid-item" id = "information">
+                Box ID - {id} <br />
+                K numbers - {', '.join(KO)} <br />
+                Taxon - {', '.join(Taxon)}
+            </div>
+            <div class="grid-item" id = "img_differential">
                 <img src="{imagem_url_differential}" alt="Color Legend">
+            </div>
+            <div class="grid-item" id = "img_potential">
                 <img src="{imagem_url_potential}" alt="Color Legend">
+            </div>
+            <div class="grid-item" id = "box_differential">
+                {color_boxes} 
+            </div>
+            <div class="grid-item" id = "ECNumber">
+                EC Number - {ec_ko}
             </div>
         </div>
     </body>
@@ -319,8 +387,7 @@ def criar_pagina_detalhe(id, link):
         file.write(detalhe_html)
 
 
-
-def criar_image_maps(coordenadas : list[dict[str, str]], imagem : str = "./KEGGCharter/original_kegg_map.png", arquivo_saida : str = f"image_maps.html", titulo_imagem : str = "Methane metabolism Map") -> None:
+def criar_image_maps(coordenadas : list[dict[str, str]], imagem : str = "./KEGGCharter/original_kegg_map.png", arquivo_saida : str = f"image_maps.html", titulo_imagem : str = "Methane metabolism Map", colors_dict : str = './KEGGCharter/info/ko00680_boxes2quant_colors.json') -> None:
     """
     Cria um arquivo HTML com mapas de imagem com base em coordenadas especificadas.
     
@@ -337,6 +404,8 @@ def criar_image_maps(coordenadas : list[dict[str, str]], imagem : str = "./KEGGC
 
     titulo_imagem : str
         Title of the image to be included in the HTML.
+
+    colors_dict : str
     
     Returns
     -------
@@ -371,7 +440,10 @@ def criar_image_maps(coordenadas : list[dict[str, str]], imagem : str = "./KEGGC
     for coord in coordenadas:
         id = coord['id']
         link = coord['link']
-        criar_pagina_detalhe(id, link)  
+        ec_ko = coord['EC_KO']
+        KO = coord['kos']
+        Taxon = coord['taxon']
+        criar_pagina_detalhe(id, link, ec_ko, KO, Taxon, colors_dict)  
         area_str = coords_to_area(coord)
         html += f'        <area shape="rect" coords="{area_str}" href="Map{numero_pathway}_Box{id}.html" target="_blank" alt="Element ID {id}">\n'
     
@@ -383,14 +455,37 @@ def criar_image_maps(coordenadas : list[dict[str, str]], imagem : str = "./KEGGC
     print(f"HTML com mapas de imagem gerado com sucesso e salvo como {arquivo_saida}!")
 
 
-# Execução do script
+
+
 if __name__ == '__main__':
     caminho_kgml = './resources_directory/kc_kgmls/ko00680.xml'
     caminho_tsv = './KEGGCharter/info/ko00680_box2name.tsv'
     caminho_json_taxon = './KEGGCharter/info/ko00680_boxes2taxon.json'
     caminho_json_kos = './KEGGCharter/info/ko00680_box2kos.json'
+    caminho_json_colors = './KEGGCharter/info/ko00680_boxes2quant_colors.json'  
     root = carregar_kgml(caminho_kgml)
     titulo_pathway = extrair_titulo_pathway(caminho_kgml)
     retangulos = extrair_elementos_graficos_com_id(root)
-    criar_image_maps(retangulos, imagem="./KEGGCharter/original_kegg_map.png", arquivo_saida=f"image_maps_{titulo_pathway}.html", titulo_imagem=f"{titulo_pathway} Map")
-    
+    retangulos_enriquecidos = enriquecer_elementos_graficos(retangulos, caminho_tsv, caminho_json_taxon, caminho_json_kos)
+    colors_dict = load_json_to_dict(caminho_json_colors)  
+    criar_image_maps(retangulos_enriquecidos, imagem="./KEGGCharter/original_kegg_map.png", arquivo_saida=f"image_maps_{titulo_pathway}.html", titulo_imagem=f"{titulo_pathway} Map", colors_dict=colors_dict)
+
+
+#main para ver output da função enriquecer_elementos_graficos
+#def main():
+    # Carregar os dados gráficos do XML (substituir pelo caminho real do arquivo XML de exemplo)
+#    caminho_kgml = './resources_directory/kc_kgmls/ko00680.xml'
+#    root = carregar_kgml(caminho_kgml)
+#    elementos_graficos_com_id = extrair_elementos_graficos_com_id(root)
+
+    # Enriquecimento dos dados
+#    elementos_enriquecidos = enriquecer_elementos_graficos(
+#        elementos_graficos_com_id, './KEGGCharter/info/ko00680_box2name.tsv', './KEGGCharter/info/ko00680_boxes2taxon.json', './KEGGCharter/info/ko00680_box2kos.json'
+#    )
+
+    # Imprimir os elementos gráficos enriquecidos
+#    for elemento in elementos_enriquecidos:
+#        print(elemento)
+
+#if __name__ == '__main__':
+#    main()
