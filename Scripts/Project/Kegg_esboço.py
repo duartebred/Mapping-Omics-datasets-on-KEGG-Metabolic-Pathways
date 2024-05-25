@@ -165,9 +165,9 @@ def enriquecer_elementos_graficos(elementos_graficos_com_id: list[dict[str, str]
 
     for elemento in elementos_graficos_com_id:
         elemento_id = elemento['id']
-        elemento['EC_KO'] = id_to_name.get(elemento_id, "Unknown")
-        elemento['taxon'] = id_to_taxon.get(elemento_id, "Unknown")
-        elemento['kos'] = id_to_kos.get(elemento_id, "Unknown")
+        elemento['EC_KO'] = id_to_name.get(elemento_id, ["Unknown"])
+        elemento['taxon'] = id_to_taxon.get(elemento_id, ["Unknown"])
+        elemento['kos'] = id_to_kos.get(elemento_id, ["Unknown"])
 
     return elementos_graficos_com_id
 
